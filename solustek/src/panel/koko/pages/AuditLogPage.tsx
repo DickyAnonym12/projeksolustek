@@ -1,8 +1,8 @@
-import { useMemo } from 'react'
-import { Card, CardBody } from '../../../ui/Card'
-import { PageHeader, PageSection } from '../../../ui/Page'
-import { formatDateTime } from '../format'
-import { useKoko } from '../store'
+import { useMemo } from "react"
+import { Card, CardBody } from "../../../ui/Card"
+import { PageHeader, PageSection } from "../../../ui/Page"
+import { formatDateTime } from "../format"
+import { useKoko } from "../store"
 
 export function AuditLogPage() {
   const { state } = useKoko()
@@ -13,37 +13,80 @@ export function AuditLogPage() {
 
   return (
     <div className="stack">
+
       <PageHeader
         title="Audit Log"
-        subtitle="Jejak perubahan data krusial: approval PO, verifikasi bayar, sengketa, katalog."
+        subtitle="Jejak perubahan data krusial: approval PO, verifikasi pembayaran, sengketa, dan perubahan katalog."
       />
 
       <PageSection title="Events">
+
         <div className="table">
-          <div className="table__head">
+
+          {/* HEADER */}
+
+          <div
+            className="table__head"
+            style={{
+              gridTemplateColumns: "220px 160px 220px 1fr",
+            }}
+          >
             <div>Waktu</div>
             <div>Aktor</div>
             <div>Aksi</div>
-            <div>Meta</div>
+            <div>Detail</div>
           </div>
+
+          {/* ROWS */}
+
           {rows.map((e) => (
-            <div key={e.id} className="table__row">
-              <div className="muted">{formatDateTime(e.at)}</div>
-              <div>{e.actor}</div>
-              <div className="mono">{e.action}</div>
-              <div className="muted mono">{e.meta ? JSON.stringify(e.meta) : '-'}</div>
+            <div
+              key={e.id}
+              className="table__row"
+              style={{
+                gridTemplateColumns: "220px 160px 220px 1fr",
+              }}
+            >
+
+              <div className="muted">
+                {formatDateTime(e.at)}
+              </div>
+
+              <div>
+                {e.actor}
+              </div>
+
+              <div className="mono">
+                {e.action}
+              </div>
+
+              <div
+                className="muted mono"
+                style={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+                title={e.meta ? JSON.stringify(e.meta, null, 2) : "-"}
+              >
+                {e.meta ? JSON.stringify(e.meta) : "-"}
+              </div>
+
             </div>
           ))}
+
         </div>
+
       </PageSection>
 
       <Card>
         <CardBody className="muted">
-          Contoh yang kamu minta: “User X mengubah HET Ayam …” akan masuk ke sini ketika fitur simpan
-          HET sudah di-wire ke backend.
+          Semua aktivitas penting sistem akan tercatat di sini, termasuk:
+          approval pesanan, verifikasi pembayaran, penyelesaian sengketa,
+          serta perubahan katalog dan harga HET.
         </CardBody>
       </Card>
+
     </div>
   )
 }
-

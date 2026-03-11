@@ -132,63 +132,89 @@ a {
   flex-direction: column;
   gap: 16px;
 }
+
+/* BRAND */
+
 .sidebar__brand {
-  padding: 16px;
-  border: none;
-  border-radius: 16px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  padding: 20px 16px;
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: white;
+  border-radius: 12px;
+  margin-bottom: 16px;
 }
+
 .brand__title {
-  font-size: 16px;
+  font-size: 22px;
   font-weight: 700;
-  color: #ffffff;
 }
+
 .brand__subtitle {
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.85);
+  opacity: 0.9;
 }
+
+/* NAV */
+
 .sidebar__nav {
   overflow: auto;
   padding-right: 6px;
 }
+
+/* GROUP */
+
 .navgroup {
-  margin-bottom: 12px;
+  margin-bottom: 14px;
+  padding: 6px;
+  border-radius: 12px;
+  background: rgba(37, 99, 235, 0.04);
+  border: 1px solid rgba(37, 99, 235, 0.08);
 }
+
 .navgroup__label {
   font-size: 11px;
   letter-spacing: 1px;
   text-transform: uppercase;
   color: var(--muted);
-  margin: 12px 8px 8px;
-  font-weight: 600;
+  margin: 6px 8px 8px;
+  font-weight: 700;
 }
+
+/* ITEMS */
+
 .navgroup__items {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
+
+/* ITEM */
+
 .navitem {
-  padding: 12px 14px;
-  border-radius: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
   border: 1px solid transparent;
   color: #4a5568;
   background: transparent;
   transition: all 0.2s ease;
   font-weight: 500;
 }
+
+/* HOVER */
+
 .navitem:hover {
-  background: #f7fafc;
-  border-color: #e2e8f0;
+  background: rgba(37, 99, 235, 0.06);
+  border-color: rgba(37, 99, 235, 0.15);
   color: var(--text);
-  transform: translateX(2px);
 }
+
+/* ACTIVE */
+
 .navitem--active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-color: transparent;
-  color: #ffffff;
+  background: rgba(37, 99, 235, 0.12);
+  border-color: rgba(37, 99, 235, 0.25);
+  color: #1e40af;
   font-weight: 600;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.25);
+  box-shadow: inset 3px 0 0 #2563eb;
 }
 .sidebar__footer {
   margin-top: auto;
@@ -244,7 +270,7 @@ a {
   gap: 10px;
 }
 .pagesection__title {
-  font-size: 13px;
+  font-size: 14px;
   letter-spacing: 0.8px;
   text-transform: uppercase;
   color: var(--muted);

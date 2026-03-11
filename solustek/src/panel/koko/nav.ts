@@ -1,4 +1,4 @@
-import type { Role } from '../../auth/auth'
+import type { Role } from './types'
 
 export type NavItem = {
   label: string
@@ -8,18 +8,24 @@ export type NavItem = {
 
 export type NavGroup = {
   label: string
+  color: string
   items: NavItem[]
 }
 
-const KOKO: Role[] = ['KOKO']
+const KOKO: Role[] = ['ADMIN']
 
 export const kokoNav: NavGroup[] = [
   {
     label: 'Dashboard',
-    items: [{ label: 'Dashboard Operasional', to: '/koko/dashboard', anyOfRoles: KOKO }],
+    color: '#3b82f6',
+    items: [
+      { label: 'Dashboard Operasional', to: '/koko/dashboard', anyOfRoles: KOKO }
+    ],
   },
+
   {
     label: 'Operasional',
+    color: '#f97316',
     items: [
       { label: 'Review Pesanan (PR)', to: '/koko/operasional/review-pesanan', anyOfRoles: KOKO },
       { label: 'Logistic Center', to: '/koko/operasional/logistic-center', anyOfRoles: KOKO },
@@ -27,8 +33,10 @@ export const kokoNav: NavGroup[] = [
       { label: 'Dispute Center', to: '/koko/operasional/dispute-center', anyOfRoles: KOKO },
     ],
   },
+
   {
     label: 'Keuangan',
+    color: '#10b981',
     items: [
       { label: 'Invoice & Piutang SPPG', to: '/koko/keuangan/invoice', anyOfRoles: KOKO },
       { label: 'Verifikasi Pembayaran', to: '/koko/keuangan/verifikasi', anyOfRoles: KOKO },
@@ -36,8 +44,10 @@ export const kokoNav: NavGroup[] = [
       { label: 'Closing Harian', to: '/koko/keuangan/closing', anyOfRoles: KOKO },
     ],
   },
+
   {
     label: 'Master Data',
+    color: '#6366f1',
     items: [
       { label: 'Master Katalog (SKU)', to: '/koko/master/katalog', anyOfRoles: KOKO },
       { label: 'Unit MBG & Wilayah', to: '/koko/master/unit-wilayah', anyOfRoles: KOKO },
@@ -45,12 +55,18 @@ export const kokoNav: NavGroup[] = [
       { label: 'Mapping Vendor → Unit', to: '/koko/master/mapping', anyOfRoles: KOKO },
     ],
   },
+
   {
     label: 'Pricing Engine',
-    items: [{ label: 'Penetapan HET', to: '/koko/pricing/het', anyOfRoles: KOKO }],
+    color: '#ec4899',
+    items: [
+      { label: 'Penetapan HET', to: '/koko/pricing/het', anyOfRoles: KOKO }
+    ],
   },
+
   {
     label: 'Pelaporan & Audit',
+    color: '#64748b',
     items: [
       { label: 'Audit Log', to: '/koko/reporting/audit-log', anyOfRoles: KOKO },
       { label: 'Profit & Margin', to: '/koko/reporting/profit', anyOfRoles: KOKO },

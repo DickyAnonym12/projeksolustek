@@ -1,47 +1,75 @@
-import { useNavigate } from 'react-router-dom'
-import type { Role } from '../auth/auth'
-import { useAuth } from '../auth/auth'
-import { Button } from '../ui/Button'
-import { Card, CardBody, CardHeader, CardTitle } from '../ui/Card'
-
-const roles: Array<{ role: Role; label: string; desc: string }> = [
-  { role: 'KOKO', label: 'Koko', desc: 'Pengelola supply chain dengan akses penuh ke semua modul.' },
-]
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { useAuth } from "../auth/auth"
+import { Button } from "../ui/Button"
+import { Card, CardBody, CardHeader, CardTitle } from "../ui/Card"
 
 export function LoginPage() {
-  const { loginAs } = useAuth()
+
+  const { login } = useAuth()
   const navigate = useNavigate()
+
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
+
+  function handleLogin() {
+
+    const ok = login(username, password)
+
+    if (!ok) {
+      setError("Username atau password salah")
+      return
+    }
+
+    navigate("/koko/dashboard", { replace: true })
+
+  }
 
   return (
     <div className="centered">
-      <div className="stack" style={{ maxWidth: 720, width: '100%' }}>
-        <div>
-          <div className="h1">Login (Demo)</div>
-          <div className="muted">Login sebagai Koko untuk membuka Panel Koko.</div>
-        </div>
 
-        <div className="grid grid--1">
-          {roles.map((r) => (
-            <Card key={r.role}>
-              <CardHeader>
-                <CardTitle>{r.label}</CardTitle>
-              </CardHeader>
-              <CardBody className="stack">
-                <div className="muted">{r.desc}</div>
-                <Button
-                  onClick={() => {
-                    loginAs(r.role)
-                    navigate('/koko/dashboard', { replace: true })
-                  }}
-                >
-                  Masuk
-                </Button>
-              </CardBody>
-            </Card>
-          ))}
-        </div>
-      </div>
+      <Card style={{ width: 420 }}>
+
+        <CardHeader>
+          <CardTitle>Login SITALA</CardTitle>
+        </CardHeader>
+
+        <CardBody className="stack">
+
+          <div className="form">
+            <label className="label">Username</label>
+            <input
+              className="input"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+
+          <div className="form">
+            <label className="label">Password</label>
+            <input
+              type="password"
+              className="input"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          {error && (
+            <div style={{ color: "red", fontSize: 13 }}>
+              {error}
+            </div>
+          )}
+
+          <Button onClick={handleLogin}>
+            Login
+          </Button>
+
+        </CardBody>
+
+      </Card>
+
     </div>
   )
 }
-

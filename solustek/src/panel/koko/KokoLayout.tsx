@@ -1,17 +1,17 @@
-import { useMemo } from 'react'
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
-import { useAuth } from '../../auth/auth'
-import { cx } from '../../ui/cx'
-import { Button } from '../../ui/Button'
-import { kokoNav } from './nav'
+import { useMemo } from "react";
+import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
+import { useAuth } from "../../auth/auth";
+import { cx } from "../../ui/cx";
+import { Button } from "../../ui/Button";
+import { kokoNav } from "./nav";
 
 function formatRole(role: string) {
-  return role === 'KOKO' ? 'Koko' : role
+  return role === "KOKO" ? "Koko" : role;
 }
 
 export function KokoLayout() {
-  const { user, hasAnyRole, logout } = useAuth()
-  const location = useLocation()
+  const { user, hasAnyRole, logout } = useAuth();
+  const location = useLocation();
 
   const nav = useMemo(() => {
     return kokoNav
@@ -19,26 +19,36 @@ export function KokoLayout() {
         ...g,
         items: g.items.filter((it) => hasAnyRole(it.anyOfRoles)),
       }))
-      .filter((g) => g.items.length > 0)
-  }, [hasAnyRole])
+      .filter((g) => g.items.length > 0);
+  }, [hasAnyRole]);
 
   const current = useMemo(() => {
-    const path = location.pathname
-    for (const g of kokoNav) for (const it of g.items) if (path.startsWith(it.to)) return it
-    return null
-  }, [location.pathname])
+    const path = location.pathname;
+    for (const g of kokoNav)
+      for (const it of g.items) if (path.startsWith(it.to)) return it;
+    return null;
+  }, [location.pathname]);
 
   return (
     <div className="app">
       <aside className="sidebar">
         <div className="sidebar__brand">
-          <div className="brand__title">Panel Koko</div>
-          <div className="brand__subtitle">Supply Chain Aggregator</div>
+          <div className="brand__title">SITALA</div>
+          <div className="brand__subtitle">
+            Sistem Tata Kelola Logistik & Anggaran MBG
+          </div>
         </div>
 
         <nav className="sidebar__nav">
           {nav.map((g) => (
-            <div key={g.label} className="navgroup">
+            <div
+              key={g.label}
+              className="navgroup"
+              style={{
+                borderLeft: `4px solid ${g.color}`,
+                background: `${g.color}10`,
+              }}
+            >
               <div className="navgroup__label">{g.label}</div>
               <div className="navgroup__items">
                 {g.items.map((it) => (
@@ -46,11 +56,11 @@ export function KokoLayout() {
                     key={it.to}
                     to={it.to}
                     className={({ isActive }) =>
-                      cx('navitem', {
-                        'navitem--active': isActive,
+                      cx("navitem", {
+                        "navitem--active": isActive,
                       })
                     }
-                    end={it.to === '/koko/dashboard'}
+                    end={it.to === "/koko/dashboard"}
                   >
                     {it.label}
                   </NavLink>
@@ -65,7 +75,7 @@ export function KokoLayout() {
             {user ? (
               <>
                 <div>{user.name}</div>
-                <div>Role: {formatRole(user.roles[0] ?? '')}</div>
+                <div>Role: {formatRole(user.roles[0] ?? "")}</div>
               </>
             ) : (
               <div>Belum login</div>
@@ -80,7 +90,7 @@ export function KokoLayout() {
             <Button
               variant="secondary"
               onClick={() => {
-                logout()
+                logout();
               }}
             >
               Logout
@@ -92,7 +102,9 @@ export function KokoLayout() {
       <div className="main">
         <header className="topbar">
           <div className="topbar__left">
-            <div className="topbar__title">{current?.label ?? 'Panel Koko'}</div>
+            <div className="topbar__title">
+              {current?.label ?? "Panel Koko"}
+            </div>
             <div className="topbar__crumb muted">{location.pathname}</div>
           </div>
         </header>
@@ -101,6 +113,5 @@ export function KokoLayout() {
         </main>
       </div>
     </div>
-  )
+  );
 }
-
