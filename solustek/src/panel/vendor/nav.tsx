@@ -1,9 +1,19 @@
+import type { ReactNode } from "react"
 import type { Role } from "../../auth/auth"
+
+import {
+  LayoutDashboard,
+  ClipboardList,
+  Truck,
+  Package,
+  History
+} from "lucide-react"
 
 export type NavItem = {
   label: string
   to: string
   anyOfRoles: Role[]
+  icon?: ReactNode
 }
 
 export type NavGroup = {
@@ -23,9 +33,10 @@ export const vendorNav: NavGroup[] = [
       {
         label: "Dashboard Vendor",
         to: "/vendor/dashboard",
-        anyOfRoles: VENDOR,
-      },
-    ],
+        icon: <LayoutDashboard size={16} />,
+        anyOfRoles: VENDOR
+      }
+    ]
   },
 
   {
@@ -36,22 +47,25 @@ export const vendorNav: NavGroup[] = [
       {
         label: "Purchase Order",
         to: "/vendor/po",
-        anyOfRoles: VENDOR,
+        icon: <ClipboardList size={16} />,
+        anyOfRoles: VENDOR
       },
 
       {
         label: "Pengiriman",
         to: "/vendor/shipping",
-        anyOfRoles: VENDOR,
+        icon: <Truck size={16} />,
+        anyOfRoles: VENDOR
       },
 
       {
         label: "Produk & Stok",
         to: "/vendor/inventory",
-        anyOfRoles: VENDOR,
-      },
+        icon: <Package size={16} />,
+        anyOfRoles: VENDOR
+      }
 
-    ],
+    ]
   },
 
   {
@@ -62,10 +76,11 @@ export const vendorNav: NavGroup[] = [
       {
         label: "Riwayat Transaksi",
         to: "/vendor/history",
-        anyOfRoles: VENDOR,
-      },
+        icon: <History size={16} />,
+        anyOfRoles: VENDOR
+      }
 
-    ],
-  },
+    ]
+  }
 
 ]

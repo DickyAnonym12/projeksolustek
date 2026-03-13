@@ -14,19 +14,15 @@ export function KokoLayout() {
   const location = useLocation();
 
   const nav = useMemo(() => {
+    if (!user) return [];
 
-  if (!user) return []
-
-  return kokoNav
-    .map((g) => ({
-      ...g,
-      items: g.items.filter((it) =>
-        it.anyOfRoles.includes(user.role)
-      ),
-    }))
-    .filter((g) => g.items.length > 0)
-
-}, [user])
+    return kokoNav
+      .map((g) => ({
+        ...g,
+        items: g.items.filter((it) => it.anyOfRoles.includes(user.role)),
+      }))
+      .filter((g) => g.items.length > 0);
+  }, [user]);
 
   const current = useMemo(() => {
     const path = location.pathname;
@@ -37,25 +33,26 @@ export function KokoLayout() {
 
   return (
     <div className="app">
+      {/* SIDEBAR */}
+
       <aside className="sidebar">
+        {/* BRAND */}
+
         <div className="sidebar__brand">
-          <div className="brand__title">SITALA</div>
-          <div className="brand__subtitle">
-            Sistem Tata Kelola Logistik & Anggaran MBG
+          <div className="brand__logo">S</div>
+          <div>
+            <div className="brand__title">SITALA</div>
+            <div className="brand__subtitle">Supply Chain Control</div>
           </div>
         </div>
 
+        {/* NAVIGATION */}
+
         <nav className="sidebar__nav">
           {nav.map((g) => (
-            <div
-              key={g.label}
-              className="navgroup"
-              style={{
-                borderLeft: `4px solid ${g.color}`,
-                background: `${g.color}10`,
-              }}
-            >
+            <div key={g.label} className="navgroup">
               <div className="navgroup__label">{g.label}</div>
+
               <div className="navgroup__items">
                 {g.items.map((it) => (
                   <NavLink
@@ -68,7 +65,9 @@ export function KokoLayout() {
                     }
                     end={it.to === "/koko/dashboard"}
                   >
-                    {it.label}
+                    <span className="navitem__icon">{it.icon || "•"}</span>
+
+                    <span className="navitem__label">{it.label}</span>
                   </NavLink>
                 ))}
               </div>
@@ -76,34 +75,37 @@ export function KokoLayout() {
           ))}
         </nav>
 
+        {/* FOOTER USER */}
+
         <div className="sidebar__footer">
-          <div className="muted" style={{ fontSize: 12 }}>
-            {user ? (
-              <>
-                <div>{user.name}</div>
-                <div>Role: {formatRole(user.role[0] ?? "")}</div>
-              </>
-            ) : (
-              <div>Belum login</div>
-            )}
+          <div className="usercard">
+            <div className="usercard__avatar">
+              {user?.name?.charAt(0) ?? "U"}
+            </div>
+
+            <div className="usercard__info">
+              <div className="usercard__name">{user?.name ?? "Guest"}</div>
+              <div className="usercard__role">
+                {formatRole(user?.role?.[0] ?? "")}
+              </div>
+            </div>
           </div>
+
           <div className="row" style={{ gap: 8 }}>
             <Link to="/login" className="w100">
               <Button variant="ghost" className="w100">
                 Ganti Role
               </Button>
             </Link>
-            <Button
-              variant="secondary"
-              onClick={() => {
-                logout();
-              }}
-            >
+
+            <Button variant="secondary" onClick={logout}>
               Logout
             </Button>
           </div>
         </div>
       </aside>
+
+      {/* MAIN */}
 
       <div className="main">
         <header className="topbar">
@@ -111,9 +113,11 @@ export function KokoLayout() {
             <div className="topbar__title">
               {current?.label ?? "Panel Koko"}
             </div>
+
             <div className="topbar__crumb muted">{location.pathname}</div>
           </div>
         </header>
+
         <main className="content">
           <Outlet />
         </main>
