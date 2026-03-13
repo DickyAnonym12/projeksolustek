@@ -164,3 +164,9 @@ export type AuditEvent = {
   action: string
   meta?: Record<string, string | number | boolean | null | undefined>
 }
+
+export type VendorUnitMapping = {
+  id: ID
+  vendorId: ID
+  unitId: ID
+}

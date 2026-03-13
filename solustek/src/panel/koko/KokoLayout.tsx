@@ -10,17 +10,23 @@ function formatRole(role: string) {
 }
 
 export function KokoLayout() {
-  const { user, hasAnyRole, logout } = useAuth();
+  const { user, logout } = useAuth();
   const location = useLocation();
 
   const nav = useMemo(() => {
-    return kokoNav
-      .map((g) => ({
-        ...g,
-        items: g.items.filter((it) => hasAnyRole(it.anyOfRoles)),
-      }))
-      .filter((g) => g.items.length > 0);
-  }, [hasAnyRole]);
+
+  if (!user) return []
+
+  return kokoNav
+    .map((g) => ({
+      ...g,
+      items: g.items.filter((it) =>
+        it.anyOfRoles.includes(user.role)
+      ),
+    }))
+    .filter((g) => g.items.length > 0)
+
+}, [user])
 
   const current = useMemo(() => {
     const path = location.pathname;
@@ -75,7 +81,7 @@ export function KokoLayout() {
             {user ? (
               <>
                 <div>{user.name}</div>
-                <div>Role: {formatRole(user.roles[0] ?? "")}</div>
+                <div>Role: {formatRole(user.role[0] ?? "")}</div>
               </>
             ) : (
               <div>Belum login</div>

@@ -1,25 +1,47 @@
 import { Navigate, useLocation } from "react-router-dom"
-import type { Role } from "../panel/koko/types"
+import type { Role } from "./auth"
 import { useAuth } from "./auth"
 
-export function RequireRole({
-  anyOf,
-  children,
-}: {
+type Props = {
   anyOf: Role[]
   children: React.ReactNode
-}) {
+}
 
-  const { user, hasAnyRole } = useAuth()
+export function RequireRole({ anyOf, children }: Props) {
+
+  const { user } = useAuth()
+
   const location = useLocation()
 
+  /* ===== BELUM LOGIN ===== */
+
   if (!user) {
-    return <Navigate to="/login" replace state={{ from: location.pathname }} />
+    return (
+      <Navigate
+        to="/login"
+        replace
+        state={{ from: location.pathname }}
+      />
+    )
   }
 
-  if (!hasAnyRole(anyOf)) {
+  /* ===== ROLE TIDAK SESUAI ===== */
+
+  if (!anyOf.includes(user.role)) {
+
+    if (user.role === "ADMIN") {
+      return <Navigate to="/koko/dashboard" replace />
+    }
+
+    if (user.role === "VENDOR") {
+      return <Navigate to="/vendor/dashboard" replace />
+    }
+
     return <Navigate to="/login" replace />
+
   }
+
+  /* ===== ROLE SESUAI ===== */
 
   return <>{children}</>
 

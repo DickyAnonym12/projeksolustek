@@ -1,133 +1,117 @@
 /* eslint-disable react-refresh/only-export-components */
-
-import { createContext, useContext, useEffect, useMemo, useState } from "react"
 import type { ReactNode } from "react"
-import type { Role, UserAccount } from "../panel/koko/types"
+import { createContext, useContext, useEffect, useMemo, useState } from "react"
 
-/* =========================
-   AUTH USER SESSION
-========================= */
+export type Role =
+  | "ADMIN"
+  | "VENDOR"
+  | "MBG_AKUNTAN"
+  | "MBG_ASLAP"
+  | "SPPG"
 
 export type AuthUser = {
   id: string
+  username: string
   name: string
-  roles: Role[]
+  role: Role
 }
-
-/* =========================
-   CONTEXT TYPE
-========================= */
 
 type AuthContextValue = {
   user: AuthUser | null
   login: (username: string, password: string) => boolean
   logout: () => void
-  hasAnyRole: (roles: Role[]) => boolean
 }
 
-const AuthContext = createContext<AuthContextValue | undefined>(undefined)
+const AuthContext = createContext<AuthContextValue | null>(null)
 
-const storageKey = "solustek.auth.user"
+const storageKey = "sitala.auth.user"
 
-/* =========================
-   DEMO ACCOUNT
-========================= */
+/* ================= MOCK USERS ================= */
 
-const accounts: UserAccount[] = [
+const mockUsers: AuthUser[] = [
+
   {
-    id: "u-admin",
+    id: "1",
     username: "admin",
-    password: "123456",
-    name: "Administrator",
-    roles: ["ADMIN"],
-    active: true,
-    createdAt: new Date().toISOString(),
+    name: "Admin SITALA",
+    role: "ADMIN",
   },
+
+  {
+    id: "2",
+    username: "vendor1",
+    name: "Vendor Beras",
+    role: "VENDOR",
+  },
+
 ]
 
-/* =========================
-   LOAD STORED USER
-========================= */
+/* ================= PROVIDER ================= */
 
-function parseStoredUser(raw: string | null): AuthUser | null {
-  if (!raw) return null
+export function AuthProvider({ children }: { children: ReactNode }) {
 
-  try {
-    const parsed = JSON.parse(raw) as AuthUser
+  const [user, setUser] = useState<AuthUser | null>(() => {
 
-    if (!parsed?.id || !parsed?.name || !Array.isArray(parsed.roles)) {
+    const raw = localStorage.getItem(storageKey)
+
+    if (!raw) return null
+
+    try {
+      return JSON.parse(raw)
+    } catch {
       return null
     }
 
-    return parsed
-  } catch {
-    return null
-  }
-}
-
-/* =========================
-   PROVIDER
-========================= */
-
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(() =>
-    parseStoredUser(localStorage.getItem(storageKey))
-  )
+  })
 
   useEffect(() => {
-    if (!user) {
-      localStorage.removeItem(storageKey)
-    } else {
-      localStorage.setItem(storageKey, JSON.stringify(user))
-    }
+
+    if (!user) localStorage.removeItem(storageKey)
+    else localStorage.setItem(storageKey, JSON.stringify(user))
+
   }, [user])
 
   const value = useMemo<AuthContextValue>(() => {
+
     return {
+
       user,
 
-      login: (username: string, password: string) => {
-        const acc = accounts.find(
-          (a) => a.username === username && a.password === password && a.active
+      login: (username, password) => {
+
+        /* password demo = 123 */
+
+        const found = mockUsers.find(
+          (u) => u.username === username && password === "123"
         )
 
-        if (!acc) return false
+        if (!found) return false
 
-        const sessionUser: AuthUser = {
-          id: acc.id,
-          name: acc.name,
-          roles: acc.roles,
-        }
-
-        setUser(sessionUser)
+        setUser(found)
 
         return true
+
       },
 
-      logout: () => {
-        setUser(null)
-      },
+      logout: () => setUser(null),
 
-      hasAnyRole: (roles: Role[]) => {
-        if (!user) return false
-        return roles.some((r) => user.roles.includes(r))
-      },
     }
+
   }, [user])
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  )
 }
 
-/* =========================
-   HOOK
-========================= */
+export function useAuth() {
 
-export function useAuth(): AuthContextValue {
   const ctx = useContext(AuthContext)
 
-  if (!ctx) {
-    throw new Error("useAuth must be used within AuthProvider")
-  }
+  if (!ctx) throw new Error("useAuth must be used within AuthProvider")
 
   return ctx
+
 }
